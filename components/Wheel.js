@@ -53,7 +53,7 @@ export default class Home extends Component{
 		let data = this.state.data;
 		data.push( {
 			"number": 1,
-			"name": "Four",
+			"name": data.length + 1,
 			"color": this.colorGenerator()
 		})
 		this.setState({data: data})
@@ -68,6 +68,7 @@ export default class Home extends Component{
   	render() {
 
 		let pieData = d3.shape.pie().value((item) => item.number)(this.state.data);
+		console.log("Pie Data: ", pieData)
 
 		let arcs = []
 		this.state.data.map((item, index) => {
@@ -86,17 +87,18 @@ export default class Home extends Component{
 				labelX: labelX,
 				labelY: labelY,
 				fill: item.color,
+				labelAngle: ((arcData.startAngle + arcData.endAngle) / 2) + 1.5708
 			})
 		})
+		let marginLeft = 20
+		let marginTop = 20
     	return <View style={{flex: 1}}>
     		<TouchableWithoutFeedback
     		onPress={() => alert("Nice")}
     		>
-    			<View
-    			style={{width: circleSize, height: circleSize, borderRadius: circleSize/2, backgroundColor: '#00BCD4'}}
-    			>
+    			<View>
 		    		<Surface width={circleSize} height={circleSize}>
-		    			<Group x={ (circleSize/2 + 20) - 20 } y={ (circleSize/2 + 20) -20 }>
+		    			<Group x={ (circleSize/2 + 20) - marginLeft } y={ (circleSize/2 + 20) - marginTop }>
 		    				{
 		    					arcs.map((arc) => {
 		    						return (
@@ -111,6 +113,26 @@ export default class Home extends Component{
 		    				}
 		    			</Group>
 		    		</Surface>
+					{
+						arcs.map((arc) => {
+							return(
+								<Text key={'label_' + arc.id}
+								style={{
+									textAlign: 'center',
+									position: 'absolute',
+									left: (circleSize/2 + 20 ) + arc.labelX - 20 - marginLeft,
+									top: (circleSize/2 + 20 ) + arc.labelY -20 - marginTop,
+									backgroundColor: 'transparent',
+									fontSize: 30,
+									color: 'black',
+									transform: [{ rotate: `${arc.labelAngle}rad` }]
+								}}>
+									{ console.log(arc) }
+									{ arc.label }
+								</Text>
+							)
+						})
+					}
 	    		</View>
     		</TouchableWithoutFeedback>
     		<Animatable.View ref="view" style={{flex: 1}}>

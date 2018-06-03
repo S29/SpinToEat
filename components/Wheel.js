@@ -37,7 +37,9 @@ export default class Home extends Component{
 		];
 
 		this.state = {
-			data: data
+			data: data,
+			isSpining: false,
+			startAngle: 0,
 		}
 	}
 
@@ -65,10 +67,11 @@ export default class Home extends Component{
 		this.setState({data: data})
 	}
 
+	handleViewRef = ref => this.view = ref;
+
   	render() {
 
 		let pieData = d3.shape.pie().value((item) => item.number)(this.state.data);
-		console.log("Pie Data: ", pieData)
 
 		let arcs = []
 		this.state.data.map((item, index) => {
@@ -87,16 +90,44 @@ export default class Home extends Component{
 				labelX: labelX,
 				labelY: labelY,
 				fill: item.color,
-				labelAngle: ((arcData.startAngle + arcData.endAngle) / 2) + 1.5708
+				labelAngle: ((arcData.startAngle + arcData.endAngle) / 2) - 1.5708
 			})
 		})
 		let marginLeft = 20
 		let marginTop = 20
     	return <View style={{flex: 1}}>
     		<TouchableWithoutFeedback
-    		onPress={() => alert("Nice")}
+    		onPress={() => {
+				if(!this.state.isSpining){
+					let realSpinBegin = 360 * 10
+					let endSpinDeg = Math.floor((Math.random() * 360 * 10)) + realSpinBegin
+					console.log("End at: ", endSpinDeg % 360)
+					this.view.animate({
+						0: {
+							rotate: `${this.state.startAngle}deg`
+						},
+						0.2: { 
+							rotate: `${realSpinBegin}deg` 
+						},
+						1: {
+							rotate: `${endSpinDeg}deg`
+						}
+					},
+					20000)
+					this.setState({
+						startAngle: endSpinDeg - realSpinBegin
+					})
+				}
+			}}
     		>
-    			<View>
+    			<Animatable.View
+				ref={this.handleViewRef}
+				onAnimationEnd={() => {
+					this.setState({
+						isSpining: false,
+					})
+				}}
+				>
 		    		<Surface width={circleSize} height={circleSize}>
 		    			<Group x={ (circleSize/2 + 20) - marginLeft } y={ (circleSize/2 + 20) - marginTop }>
 		    				{
@@ -127,17 +158,14 @@ export default class Home extends Component{
 									color: 'black',
 									transform: [{ rotate: `${arc.labelAngle}rad` }]
 								}}>
-									{ console.log(arc) }
 									{ arc.label }
 								</Text>
 							)
 						})
 					}
-	    		</View>
+	    		</Animatable.View>
     		</TouchableWithoutFeedback>
-    		<Animatable.View ref="view" style={{flex: 1}}>
-    			<Text> SWAG </Text>
-    		</Animatable.View>
+
 			<View style={{position: 'absolute', right: 50, bottom: 100}}>
 				<Button
 					title="Add"

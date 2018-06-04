@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Text, View, Dimensions, ART, TouchableWithoutFeed
 import * as shape from 'd3-shape'
 import { Button } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
-
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 const window = Dimensions.get('window');
 const circleSize = window.width * 0.9;
@@ -38,7 +38,7 @@ export default class Home extends Component{
 
 		this.state = {
 			data: data,
-			isSpining: false,
+			isSpinning: false,
 			startAngle: 0,
 		}
 	}
@@ -69,8 +69,40 @@ export default class Home extends Component{
 
 	handleViewRef = ref => this.view = ref;
 
-  	render() {
+	onSpinSwipe(type) {
+		if(!this.state.isSpinning){
+			let realSpinBegin = 360 * 10
+			let endSpinDeg = Math.floor((Math.random() * 360 * 10)) + realSpinBegin
 
+			if (type === 1){	// counter clock wise
+				realSpinBegin = -360 * 10
+				endSpinDeg = -Math.floor((Math.random() * 360 * 10)) + realSpinBegin
+			}
+			console.log("End at: ", endSpinDeg % 360)
+			this.view.animate({
+				0: {
+					rotate: `${this.state.startAngle}deg`
+				},
+				0.2: { 
+					rotate: `${realSpinBegin}deg` 
+				},
+				1: {
+					rotate: `${endSpinDeg}deg`
+				}
+			},
+			20000).then( (endState) => {
+				this.setState({
+					isSpinning: false
+				})
+			})
+			this.setState({
+				startAngle: endSpinDeg % 360,
+				isSpinning: true
+			})
+		}
+	}
+
+  	render() {
 		let pieData = d3.shape.pie().value((item) => item.number)(this.state.data);
 
 		let arcs = []
@@ -96,75 +128,107 @@ export default class Home extends Component{
 		let marginLeft = 20
 		let marginTop = 20
     	return <View style={{flex: 1}}>
-    		<TouchableWithoutFeedback
-    		onPress={() => {
-				if(!this.state.isSpining){
-					let realSpinBegin = 360 * 10
-					let endSpinDeg = Math.floor((Math.random() * 360 * 10)) + realSpinBegin
-					console.log("End at: ", endSpinDeg % 360)
-					this.view.animate({
-						0: {
-							rotate: `${this.state.startAngle}deg`
-						},
-						0.2: { 
-							rotate: `${realSpinBegin}deg` 
-						},
-						1: {
-							rotate: `${endSpinDeg}deg`
+
+			<Animatable.View
+			ref={this.handleViewRef}
+			>
+
+				<Surface width={circleSize} height={circleSize}>
+					<Group x={ (circleSize/2 + 20) - marginLeft } y={ (circleSize/2 + 20) - marginTop }>
+						{
+							arcs.map((arc) => {
+								return (
+									<Shape
+										key={arc.id}
+										d={arc.arcGenerator()}
+										strokeWidth={0}
+										fill={arc.fill}
+									/>
+								)
+							})
 						}
-					},
-					20000)
-					this.setState({
-						startAngle: endSpinDeg - realSpinBegin
+					</Group>
+				</Surface>
+				{
+					arcs.map((arc) => {
+						return(
+							<Text key={'label_' + arc.id}
+							style={{
+								textAlign: 'center',
+								position: 'absolute',
+								left: (circleSize/2 + 20 ) + arc.labelX - 20 - marginLeft,
+								top: (circleSize/2 + 20 ) + arc.labelY -20 - marginTop,
+								backgroundColor: 'transparent',
+								fontSize: 30,
+								color: 'black',
+								transform: [{ rotate: `${arc.labelAngle}rad` }]
+							}}>
+								{ arc.label }
+							</Text>
+						)
 					})
 				}
-			}}
-    		>
-    			<Animatable.View
-				ref={this.handleViewRef}
-				onAnimationEnd={() => {
-					this.setState({
-						isSpining: false,
-					})
+			</Animatable.View>
+
+			{/* Top left */}
+			<GestureRecognizer
+				onSwipeRight={(state)=>this.onSpinSwipe(0)}
+				onSwipeDown={(state)=>this.onSpinSwipe(1)}
+				style={{
+					position: 'absolute',
+					left: 0,
+					top: 0,
+					width: circleSize/2,
+					height: circleSize/2,
+					backgroundColor: 'transparent'
 				}}
-				>
-		    		<Surface width={circleSize} height={circleSize}>
-		    			<Group x={ (circleSize/2 + 20) - marginLeft } y={ (circleSize/2 + 20) - marginTop }>
-		    				{
-		    					arcs.map((arc) => {
-		    						return (
-		    							<Shape
-		    								key={arc.id}
-		    								d={arc.arcGenerator()}
-		    								strokeWidth={0}
-		    								fill={arc.fill}
-		    							/>
-		    						)
-		    					})
-		    				}
-		    			</Group>
-		    		</Surface>
-					{
-						arcs.map((arc) => {
-							return(
-								<Text key={'label_' + arc.id}
-								style={{
-									textAlign: 'center',
-									position: 'absolute',
-									left: (circleSize/2 + 20 ) + arc.labelX - 20 - marginLeft,
-									top: (circleSize/2 + 20 ) + arc.labelY -20 - marginTop,
-									backgroundColor: 'transparent',
-									fontSize: 30,
-									color: 'black',
-									transform: [{ rotate: `${arc.labelAngle}rad` }]
-								}}>
-									{ arc.label }
-								</Text>
-							)
-						})
-					}
-	    		</Animatable.View>
-    		</TouchableWithoutFeedback>
+			>
+			</GestureRecognizer>
+
+			{/* Top right */}
+			<GestureRecognizer
+				onSwipeDown={(state)=>this.onSpinSwipe(0)}
+				onSwipeLeft={(state)=>this.onSpinSwipe(1)}				
+				style={{
+					position: 'absolute',
+					left: circleSize/2,
+					top: 0,
+					width: circleSize/2,
+					height: circleSize/2,
+					backgroundColor: 'transparent'
+				}}
+			>
+			</GestureRecognizer>
+
+			{/* Bottom left */}
+			<GestureRecognizer
+				onSwipeUp={(state)=>this.onSpinSwipe(0)}
+				onSwipeRight={(state)=>this.onSpinSwipe(1)}				
+				style={{
+					position: 'absolute',
+					left: 0,
+					top: circleSize/2,
+					width: circleSize/2,
+					height: circleSize/2,
+					backgroundColor: 'transparent'
+				}}
+			>
+			</GestureRecognizer>
+
+			{/* Bottom right */}
+			<GestureRecognizer
+				onSwipeLeft={(state)=>this.onSpinSwipe(0)}
+				onSwipeUp={(state)=>this.onSpinSwipe(1)}				
+				style={{
+					position: 'absolute',
+					left: circleSize/2,
+					top: circleSize/2,
+					width: circleSize/2,
+					height: circleSize/2,
+					backgroundColor: 'transparent'
+				}}
+			>
+			</GestureRecognizer>
 
 			<View style={{position: 'absolute', right: 50, bottom: 100}}>
 				<Button

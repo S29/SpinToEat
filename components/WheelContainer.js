@@ -18,13 +18,21 @@ const uiTheme = {
 
 export default class Home extends Component{
   static navigationOptions = {
-    title: 'Wheel Page',
+    title: 'Spin the wheel!',
   };
+
+  constructor(props) {
+      super(props)
+  }
+  
   render() {
-    const { navigate } = this.props.navigation;
+    const { navigation } = this.props;
+    const list = navigation.getParam('param');
     return <View style={{flex: 1}}>
      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 100}}> 
-        <Wheel />
+        <Wheel 
+            list={list}
+        />
      </View>
     </View>
   }

@@ -17,21 +17,46 @@ const uiTheme = {
 
 export default class Home extends Component{
   static navigationOptions = {
-    title: 'Home Page',
+    title: 'Home',
   };
+
+  constructor (props) {
+    super(props)
+  }
+
+  componentDidMount() {
+    this.setState({
+      list: [],
+    })
+  }
+
+  onAddToWheelPressed(item) {
+    let list = this.state.list
+    list.push(item)
+    this.setState({
+      list: list
+    })
+  }
+
   render() {
     const { navigate } = this.props.navigation;
     return <View style={{flex: 1}}>
     <ThemeProvider uiTheme={uiTheme}>
       <View style={{flex: 1}}>
-        <SearchBar />
+        <SearchBar 
+          onAddToWheelPressed={(item) => this.onAddToWheelPressed(item)}
+        />
         <View style={{position: 'absolute', right: 50, bottom: 50}}>
           <ActionButton
-          raised
-          primary
-          icon="refresh"
-          size={80}
-          onPress={() => this.props.navigation.navigate('Wheel', { key: 'HomeToWheel' })}
+            raised
+            primary
+            icon="done"
+            size={80}
+            onPress={() => this.props.navigation.navigate('Wheel', 
+              { key: 'HomeToWheel',
+                param: this.state.list
+              }
+            )}
           />
         </View>
       </View>

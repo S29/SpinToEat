@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, } from 'react-native';
 import { StackNavigator } from 'react-navigation';
-import { Button } from 'react-native-elements';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import apiConfig from '../apiKeys';
+import InformationCard from '../components/InformationCard';
+import PropTypes from 'prop-types';
 
 const vancouver = {
   lat: 49.2379245,
   lon: -123.1058443,
 }
-
 
 export default class SearchBar extends Component{
 
@@ -23,8 +23,8 @@ export default class SearchBar extends Component{
         listViewDisplayed='auto'
         enablePoweredByContainer={false}
         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-          console.log(data);
-          console.log(details);
+          // console.log(data);
+          // console.log(details);
         }}
         getDefaultValue={() => {
           return ''; // text input default value
@@ -73,19 +73,19 @@ export default class SearchBar extends Component{
 
         renderRow = {(rowData) => {
                               return <View style={{flex: 1}}>
-                                <Text style={{fontSize: 20, fontWeight: 'bold'}}
-                                    numberOfLines={2}> {rowData.description} </Text>
-                                <View style={{position: 'absolute', right: 0, bottom: 0}}>
-                                  <Button 
-                                    raised
-                                    title='Add to wheel'
-
-                                  />
-                                </View>
+                                <InformationCard
+                                  data={rowData}
+                                  onAddToWheelPressed={(item) => this.props.onAddToWheelPressed(item)}
+                                />
                               </View>
                           }
-                        }
+                    }
       />
     </View>
   }
 }
+
+SearchBar.propTypes = {
+  onAddToWheelPressed: PropTypes.func.isRequired
+}
+

@@ -4,6 +4,7 @@ import * as shape from 'd3-shape'
 import { Button } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import PropTypes from 'prop-types';
 
 const window = Dimensions.get('window');
 const circleSize = window.width * 0.9;
@@ -18,29 +19,44 @@ const {
 	Shape,
 } = ART;
 
-export default class Home extends Component{
+export default class Wheel extends Component{
 	handleViewRef = ref => this.view = ref;
 
 	constructor(props){
 		super(props)
 
-		let data = [
-			{
-				"number": 1, "name": 'one', "color": this.colorGenerator()
-			},
-			{
-				"number": 1, "name": 'two', "color": this.colorGenerator()
-			},
-			{
-				"number": 1, "name": 'three', "color": this.colorGenerator()
-			},
-		];
+		// let data = [
+		// 	{
+		// 		"number": 1, "name": 'o', "color": this.colorGenerator()
+		// 	},
+		// 	{
+		// 		"number": 1, "name": 'twoooooo', "color": this.colorGenerator()
+		// 	},
+		// 	{
+		// 		"number": 1, "name": 'threeeeeeeeeee', "color": this.colorGenerator()
+		// 	},
+		// 	{
+		// 		"number": 1, "name": '4', "color": this.colorGenerator()
+		// 	},
+		// ];
+
+		let data = []
+		for (i = 0; i < this.props.list.length; i++) {
+			item = {
+				"number": 1,
+				"name": this.props.list[i],
+				"color": this.colorGenerator(),
+			}
+			data.push(item)
+		}
 
 		this.state = {
 			data: data,
 			isSpinning: false,
 			startAngle: 0,
 		}
+
+		console.log(this.props.list)
 	}
 
 	colorGenerator() {
@@ -156,10 +172,10 @@ export default class Home extends Component{
 							style={{
 								textAlign: 'center',
 								position: 'absolute',
-								left: (circleSize/2 + 20 ) + arc.labelX - 20 - marginLeft,
-								top: (circleSize/2 + 20 ) + arc.labelY -20 - marginTop,
+								left: (circleSize/2 + 20 ) + arc.labelX - 20 - marginLeft - arc.label.length*5.5 + this.state.data.length*0.55,
+								top: (circleSize/2 + 20 ) + arc.labelY -20 - marginTop - arc.label.length + this.state.data.length*0.55,
 								backgroundColor: 'transparent',
-								fontSize: 30,
+								fontSize: 30 - this.state.data.length*0.3,
 								color: 'black',
 								transform: [{ rotate: `${arc.labelAngle}rad` }]
 							}}>
@@ -266,3 +282,8 @@ const styles = StyleSheet.create({
   		backgroundColor: 'black',
   	}
 });
+
+
+Wheel.propTypes = {
+    list: PropTypes.array.isRequired
+}

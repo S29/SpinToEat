@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Platform, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 
 export default class InformationCard extends Component{
@@ -17,15 +16,20 @@ export default class InformationCard extends Component{
                 numberOfLines={2}> {data.description} 
             </Text>
             <View style={{position: 'absolute', right: 0, bottom: 0}}>
-                <Button 
-                    raised
-                    title='Add to wheel'
+
+                <TouchableOpacity
                     onPress={() => this.props.onAddToWheelPressed(item)}
-                    buttonStyle={{
-                        backgroundColor: 'green',
+                    style={{
+                        backgroundColor: 'green', 
                         borderRadius: 5,
+                        height: 45, 
+                        width: 90, 
+                        alignItems: 'center',
+                        justifyContent: 'center',
                     }}
-                />
+                >
+                    <Text style={{color: 'white'}}>Add to wheel</Text>
+                </TouchableOpacity>
             </View>
         </View>
     }

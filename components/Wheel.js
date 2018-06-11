@@ -24,22 +24,7 @@ export default class Wheel extends Component{
 
 	constructor(props){
 		super(props)
-
-		// let data = [
-		// 	{
-		// 		"number": 1, "name": 'o', "color": this.colorGenerator()
-		// 	},
-		// 	{
-		// 		"number": 1, "name": 'twoooooo', "color": this.colorGenerator()
-		// 	},
-		// 	{
-		// 		"number": 1, "name": 'threeeeeeeeeee', "color": this.colorGenerator()
-		// 	},
-		// 	{
-		// 		"number": 1, "name": '4', "color": this.colorGenerator()
-		// 	},
-		// ];
-
+		
 		let data = []
 		for (i = 0; i < this.props.list.length; i++) {
 			item = {

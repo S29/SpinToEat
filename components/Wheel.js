@@ -24,12 +24,12 @@ export default class Wheel extends Component{
 
 	constructor(props){
 		super(props)
-		
+
 		let data = []
 		for (i = 0; i < this.props.list.length; i++) {
 			item = {
 				"number": 1,
-				"name": this.props.list[i],
+				"name": this.props.list[i].value,
 				"color": this.colorGenerator(),
 			}
 			data.push(item)
@@ -50,22 +50,6 @@ export default class Wheel extends Component{
 			+ Math.floor(Math.random()*256 ) + ','
 			+ Math.floor(Math.random()*256 ) +
 			')'
-	}
-
-	add() {
-		let data = this.state.data;
-		data.push( {
-			"number": 1,
-			"name": data.length + 1,
-			"color": this.colorGenerator()
-		})
-		this.setState({data: data})
-	}
-
-	remove() {
-		let data = this.state.data;
-		data.pop()
-		this.setState({data: data})
 	}
 
 	handleViewRef = ref => this.view = ref;
@@ -230,17 +214,6 @@ export default class Wheel extends Component{
 				}}
 			>
 			</GestureRecognizer>
-
-			<View style={{position: 'absolute', right: 50, bottom: 100}}>
-				<Button
-					title="Add"
-					onPress={() => this.add()}
-				/>
-				<Button
-					title="Remove"
-					onPress={() => this.remove()}
-				/>
-			</View>
     	</View>
   	}
 }

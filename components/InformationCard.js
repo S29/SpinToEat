@@ -10,7 +10,10 @@ export default class InformationCard extends Component{
 
     render() {
         let data = this.props.data
-        let item = data.terms[0].value    // name of place without address
+        let item = {
+            value: data.terms[0].value,
+            id: data.id
+        }
         return <View style={{flex: 1}}>
             <Text style={{fontSize: 20, fontWeight: 'bold'}}
                 numberOfLines={2}> {data.description} 
@@ -18,7 +21,7 @@ export default class InformationCard extends Component{
             <View style={{position: 'absolute', right: 0, bottom: 0}}>
 
                 <TouchableOpacity
-                    onPress={() => this.props.onAddToWheelPressed(item)}
+                    onPress={() => {this.props.onAddToWheelPressed(item)}}
                     style={{
                         backgroundColor: 'green', 
                         borderRadius: 5,
@@ -26,6 +29,7 @@ export default class InformationCard extends Component{
                         width: 90, 
                         alignItems: 'center',
                         justifyContent: 'center',
+                        elevation: 3,
                     }}
                 >
                     <Text style={{color: 'white'}}>Add to wheel</Text>

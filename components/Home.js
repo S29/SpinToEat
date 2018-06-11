@@ -48,7 +48,6 @@ export default class Home extends Component{
         />
         <View style={{position: 'absolute', right: 50, bottom: 50}}>
           <ActionButton
-            raised
             primary
             icon="done"
             size={80}

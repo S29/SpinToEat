@@ -17,7 +17,7 @@ const uiTheme = {
 
 export default class Home extends Component{
   static navigationOptions = {
-    title: 'Home',
+    title: 'Search',
   };
 
   constructor (props) {

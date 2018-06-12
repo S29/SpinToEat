@@ -7,7 +7,7 @@
 import React, { Component } from 'react';
 import { StackNavigator } from 'react-navigation';
 import { Platform, StyleSheet, Text, View, Button, } from 'react-native';
-import Home from "./components/Home"
+import SearchContainer from "./components/SearchContainer"
 import WheelContainer from "./components/WheelContainer"
 
 class App extends Component {
@@ -38,9 +38,8 @@ const styles = StyleSheet.create({
 });
 
 const navigator = StackNavigator({
-  Home: { screen: Home },
-  Wheel: { screen: WheelContainer },
-
+  WheelScreen: { screen: WheelContainer },
+  SearchScreen: { screen: SearchContainer },
 });
 
 export default navigator;

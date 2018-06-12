@@ -18,20 +18,22 @@ const uiTheme = {
 
 export default class Home extends Component{
   static navigationOptions = {
-    title: 'Spin the wheel!',
+    title: 'Wheel',
   };
 
   constructor(props) {
       super(props)
+      this.state = {
+          list: []
+      }
   }
   
   render() {
     const { navigation } = this.props;
-    const list = navigation.getParam('param');
     return <View style={{flex: 1}}>
         <View style={{flex: 3, alignItems: 'center', justifyContent: 'center', marginTop: 50}}> 
             <Wheel 
-                list={list}
+                list={this.state.list}
             />
         </View>
         <ScrollView
@@ -48,25 +50,56 @@ export default class Home extends Component{
             showsHorizontalScrollIndicator={false}
         >
             {
-                list.map((item) => {
+                this.state.list.map((item) => {
                     return <TouchableOpacity key={item.id}
-                        style={{
-                            backgroundColor: 'white',
-                            margin: 10,
-                            borderRadius: 150/2,
-                            width: 150,
-                            height: 150,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            elevation: 2,
-                        }}
+                        style={styles.largeCircle}
                         onPress={() => alert("To edit or delete")}
                     >
                         <Text> {item.value} </Text>
                     </TouchableOpacity>
                 })
             }
+            <View
+               style={{flexDirection: 'row'}} 
+            >
+                <TouchableOpacity
+                        style={styles.smallCircle}
+                        onPress={() => alert("To edit or delete")}
+                >
+                    <Text> Add </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                        style={[styles.smallCircle, {backgroundColor: 'white'}]}
+                        onPress={() => alert("To edit or delete")}
+                >
+                    <Text> Search </Text>
+                </TouchableOpacity>
+            </View>
         </ScrollView>
     </View>
   }
 }
+
+const styles = StyleSheet.create({
+    largeCircle: {
+        backgroundColor: 'white',
+        margin: 10,
+        borderRadius: 150/2,
+        width: 150,
+        height: 150,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 2,
+    },
+    smallCircle: {
+        backgroundColor: 'white',
+        margin: 5,
+        borderRadius: 75/2,
+        width: 75,
+        height: 75,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 2,
+    }
+  });

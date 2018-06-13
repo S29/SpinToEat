@@ -34,8 +34,6 @@ export default class Wheel extends Component{
 	componentWillReceiveProps() {
 		let data = []
 		for (i = 0; i < this.props.list.length; i++) {
-			let name = this.props.list[i].value
-			console.warn(name.length)
 			item = {
 				"number": 1,
 				"name": this.props.list[i].value,

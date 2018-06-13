@@ -29,6 +29,13 @@ export default class Home extends Component{
   }
 
   onAddToWheelPressed(item) {
+    // TODO: shorten name that are too long
+    if(item.value.length >= 15) {
+        let temp = item.value.split(' ')
+        if(temp.length > 1) {
+            item.value = temp[0] + " " + temp[1]
+        }
+    }
     let list = this.state.list
     list.push(item)
     this.setState({

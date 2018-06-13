@@ -34,6 +34,8 @@ export default class Wheel extends Component{
 	componentWillReceiveProps() {
 		let data = []
 		for (i = 0; i < this.props.list.length; i++) {
+			let name = this.props.list[i].value
+			console.warn(name.length)
 			item = {
 				"number": 1,
 				"name": this.props.list[i].value,
@@ -58,14 +60,13 @@ export default class Wheel extends Component{
 
 	onSpinSwipe(type) {
 		if(!this.state.isSpinning){
-			let realSpinBegin = 360 * 10
-			let endSpinDeg = Math.floor((Math.random() * 360 * 10)) + realSpinBegin
+			let realSpinBegin = 360 * 10 * 1
+			let endSpinDeg = Math.floor((Math.random() * 360 * 10 * 5)) + realSpinBegin
 
 			if (type === 1){	// counter clock wise
-				realSpinBegin = -360 * 10
-				endSpinDeg = -Math.floor((Math.random() * 360 * 10)) + realSpinBegin
+				realSpinBegin = -360 * 10 * 1
+				endSpinDeg = -Math.floor((Math.random() * 360 * 10 * 5)) + realSpinBegin
 			}
-			console.log("End at: ", endSpinDeg % 360)
 			this.view.animate({
 				0: {
 					rotate: `${this.state.startAngle}deg`
@@ -77,7 +78,7 @@ export default class Wheel extends Component{
 					rotate: `${endSpinDeg}deg`
 				}
 			},
-			20000).then( (endState) => {
+			30000).then( (endState) => {
 				this.setState({
 					isSpinning: false
 				})
@@ -114,8 +115,9 @@ export default class Wheel extends Component{
 		})
 		let marginLeft = 20
 		let marginTop = 20
-    	return <View style={{flex: 1}}>
-
+    	return <View>
+		{this.props.list.length >= 2 &&
+		<View style={{flex: 1}}>
 			<Animatable.View
 			ref={this.handleViewRef}
 			>
@@ -156,6 +158,13 @@ export default class Wheel extends Component{
 					})
 				}
 			</Animatable.View>
+			
+			<View style={[styles.orb, {left: circleSize/2 - 20}]}>
+			</View>
+			<View 
+				style={[styles.triangle, {left: circleSize/2 - 20}]}
+			>
+			</View>
 
 			{/* Top left */}
 			<GestureRecognizer
@@ -217,6 +226,8 @@ export default class Wheel extends Component{
 			>
 			</GestureRecognizer>
     	</View>
+		}
+		</View>
   	}
 }
 
@@ -240,7 +251,30 @@ const styles = StyleSheet.create({
   		height: 10,
   		borderRadius: 5/2,
   		backgroundColor: 'black',
-  	}
+	},
+	triangle: {
+		width: 0,
+		height: 0,
+		backgroundColor: 'transparent',
+		borderStyle: 'solid',
+		borderLeftWidth: 20,
+		borderRightWidth: 20,
+		borderBottomWidth: 50,
+		borderLeftColor: 'transparent',
+		borderRightColor: 'transparent',
+		borderBottomColor: '#f44336',
+		transform: [{rotate: '180deg'}],
+		position: 'absolute',
+	},
+	orb: {
+		height: 40,
+		width: 40,
+		borderRadius: 20,
+		backgroundColor: '#f44336',
+		position: 'absolute',
+		top: -25,
+	}
+	  
 });
 
 

@@ -24,12 +24,19 @@ export default class Home extends Component{
   constructor(props) {
       super(props)
       this.state = {
-          list: []
+            list: []
       }
+  }
+
+  onAddToWheelPressed(item) {
+    let list = this.state.list
+    list.push(item)
+    this.setState({
+        list: list
+    })
   }
   
   render() {
-    const { navigation } = this.props;
     return <View style={{flex: 1}}>
         <View style={{flex: 3, alignItems: 'center', justifyContent: 'center', marginTop: 50}}> 
             <Wheel 
@@ -63,18 +70,26 @@ export default class Home extends Component{
                style={{flexDirection: 'row'}} 
             >
                 <TouchableOpacity
-                        style={styles.smallCircle}
-                        onPress={() => alert("To edit or delete")}
+                        style={[styles.smallCircle, {backgroundColor: 'white'}]}
+                        // onPress={() => alert("To edit or delete")}
+                        onPress={() => console.warn(this.state.list)}
                 >
                     <Text> Add </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                        style={[styles.smallCircle, {backgroundColor: 'white'}]}
-                        onPress={() => alert("To edit or delete")}
+                        style={styles.smallCircle}
+                        onPress={() => {
+                            this.props.navigation.navigate('SearchScreen', 
+                                {   
+                                    key: 'WheelToSearch',
+                                    onAddToWheelPressed: item => this.onAddToWheelPressed(item),
+                                })
+                        }}
                 >
                     <Text> Search </Text>
                 </TouchableOpacity>
+                
             </View>
         </ScrollView>
     </View>

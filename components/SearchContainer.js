@@ -24,38 +24,20 @@ export default class Home extends Component{
     super(props)
   }
 
-  componentDidMount() {
-    this.setState({
-      list: [],
-    })
-  }
-
-  onAddToWheelPressed(item) {
-    let list = this.state.list
-    list.push(item)
-    this.setState({
-      list: list
-    })
-  }
-
   render() {
-    const { navigate } = this.props.navigation;
+    let onAddToWheelPressed = this.props.navigation.getParam('onAddToWheelPressed')
     return <View style={{flex: 1}}>
     <ThemeProvider uiTheme={uiTheme}>
       <View style={{flex: 1}}>
         <SearchBar 
-          onAddToWheelPressed={(item) => this.onAddToWheelPressed(item)}
+          onAddToWheelPressed={(item) => onAddToWheelPressed(item)}
         />
         <View style={{position: 'absolute', right: 50, bottom: 50}}>
           <ActionButton
             primary
             icon="done"
             size={80}
-            onPress={() => this.props.navigation.navigate('Wheel', 
-              { key: 'HomeToWheel',
-                param: this.state.list
-              }
-            )}
+            onPress={() => this.props.navigation.goBack()}
           />
         </View>
       </View>

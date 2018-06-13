@@ -24,7 +24,14 @@ export default class Wheel extends Component{
 
 	constructor(props){
 		super(props)
+		this.state = {
+			data: [],
+			isSpinning: false,
+			startAngle: 0,
+		}
+	}
 
+	componentWillReceiveProps() {
 		let data = []
 		for (i = 0; i < this.props.list.length; i++) {
 			item = {
@@ -34,14 +41,9 @@ export default class Wheel extends Component{
 			}
 			data.push(item)
 		}
-
-		this.state = {
-			data: data,
-			isSpinning: false,
-			startAngle: 0,
-		}
-
-		console.log(this.props.list)
+		this.setState({
+			data: data
+		})
 	}
 
 	colorGenerator() {

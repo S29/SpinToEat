@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, ScrollView, TouchableOpacity} from 'react-native';
+import { Platform, StyleSheet, Text, View, ScrollView, TouchableOpacity, Dimensions, TextInput} from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { COLOR, ThemeProvider } from 'react-native-material-ui';
 import Wheel from '../components/Wheel'
+import { Divider } from 'react-native-elements';
 
-
+const window = Dimensions.get('window');
 const uiTheme = {
     palette: {
         primaryColor: COLOR.green500,
@@ -24,7 +25,8 @@ export default class Home extends Component{
   constructor(props) {
       super(props)
       this.state = {
-            list: []
+            list: [],
+            isAdding: false,
       }
   }
 
@@ -78,8 +80,7 @@ export default class Home extends Component{
             >
                 <TouchableOpacity
                         style={[styles.smallCircle, {backgroundColor: 'white'}]}
-                        // onPress={() => alert("To edit or delete")}
-                        onPress={() => console.warn(this.state.list)}
+                        onPress={() => this.setState({isAdding: true})}
                 >
                     <Text> Add </Text>
                 </TouchableOpacity>
@@ -99,6 +100,70 @@ export default class Home extends Component{
                 
             </View>
         </ScrollView>
+
+        {
+            this.state.isAdding &&
+            <View style={styles.addWindow}>
+                <Text 
+                    style={{
+                        fontSize: 20, 
+                        fontWeight: 'bold',
+                        alignSelf: 'center',
+                        marginTop: 10,
+                        marginBottom: 10,
+                    }}> 
+                    Add an item 
+                </Text>
+
+                <TextInput
+                    style={{
+                        height: 40, 
+                        borderColor: 'gray', 
+                        borderWidth: 1,
+                        marginLeft: 10,
+                        marginRight: 10,
+                        borderRadius: 3,
+                    }}
+                />
+
+                <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                    <TouchableOpacity
+                        style={{
+                            height: 40,
+                            width: 40,
+                            borderRadius: 20, 
+                            backgroundColor: '#f44336', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            marginTop: 10,
+                            marginBottom: 10,
+                            marginRight: 5,
+                            marginLeft: 5,
+                        }}
+                    >
+                        <Text> ✗ </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={{
+                            height: 40,
+                            width: 40,
+                            borderRadius: 20, 
+                            backgroundColor: '#8BC34A', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            marginTop: 10,
+                            marginBottom: 10,
+                            marginRight: 5,
+                            marginLeft: 5,
+                        }}
+                    >
+                        <Text> ✓ </Text>
+                    </TouchableOpacity>
+
+                </View>
+            </View>
+        }
     </View>
   }
 }
@@ -123,5 +188,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 2,
+    },
+    addWindow: { 
+        position: 'absolute',
+        backgroundColor: 'white',
+        elevation: 2,
+        borderRadius: 5,
+        width: window.width/1.5,
+        left: (window.width - window.width/1.5)/2,  // TODO: find another way to center the window
+        top: window.height /3,   // above the add and search buttons
     }
   });

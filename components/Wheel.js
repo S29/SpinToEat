@@ -51,19 +51,20 @@ export default class Wheel extends Component{
 	onSpinSwipe(type) {
 		if(!this.state.isSpinning){
 			let realSpinBegin = 360 * 10 * 1
-			let endSpinDeg = Math.floor((Math.random() * 360 * 10 * 5)) + realSpinBegin
+			let endSpinDeg = Math.floor((Math.random() * 360 * 10 * 50)) + realSpinBegin
 
 			if (type === 1){	// counter clock wise
 				realSpinBegin = -360 * 10 * 1
-				endSpinDeg = -Math.floor((Math.random() * 360 * 10 * 5)) + realSpinBegin
+				endSpinDeg = -Math.floor((Math.random() * 360 * 10 * 50)) + realSpinBegin
 			}
+			// console.warn( (endSpinDeg - this.state.startAngle)/360 )
 			this.view.animate({
 				0: {
 					rotate: `${this.state.startAngle}deg`
 				},
-				0.2: { 
-					rotate: `${realSpinBegin}deg` 
-				},
+				// 0.2: { 
+				// 	rotate: `${realSpinBegin}deg` 
+				// },
 				1: {
 					rotate: `${endSpinDeg}deg`
 				}
@@ -150,11 +151,9 @@ export default class Wheel extends Component{
 						}
 					</Animatable.View>
 					
-					<View style={[styles.orb, {left: circleSize/2 - 20}]}>
+					<View style={styles.orb}>
 					</View>
-					<View 
-						style={[styles.triangle, {left: circleSize/2 - 20}]}
-					>
+					<View style={styles.triangle}>
 					</View>
 
 					{/* Top left */}
@@ -227,11 +226,12 @@ export default class Wheel extends Component{
 							height: circleSize, 
 							width: circleSize, 
 							borderRadius: circleSize/2,
-							elevation: 2,
-							position: 'absolute',
-							left: -circleSize/2
 						}}
 					>
+					</View>
+					<View style={[styles.orb, {left: circleSize/2 - 20}]}>
+					</View>
+					<View style={[styles.triangle, {left: circleSize/2 - 20}]}>
 					</View>
 				</View>
 			}
@@ -273,6 +273,7 @@ const styles = StyleSheet.create({
 		borderBottomColor: '#f44336',
 		transform: [{rotate: '180deg'}],
 		position: 'absolute',
+		left: circleSize/2 - 20,
 	},
 	orb: {
 		height: 40,
@@ -281,6 +282,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#f44336',
 		position: 'absolute',
 		top: -25,
+		left: circleSize/2 - 20,
 	}
 	  
 });

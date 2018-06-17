@@ -72,11 +72,13 @@ export default class Wheel extends Component{
 				this.setState({
 					isSpinning: false
 				})
+				this.props.onSpinSwipe(false)
 			})
 			this.setState({
 				startAngle: endSpinDeg % 360,
 				isSpinning: true
 			})
+			this.props.onSpinSwipe(true)
 		}
 	}
 
@@ -285,5 +287,6 @@ const styles = StyleSheet.create({
 
 
 Wheel.propTypes = {
-    list: PropTypes.array.isRequired
+	list: PropTypes.array.isRequired,
+	onSpinSwipe: PropTypes.func.isRequired,
 }

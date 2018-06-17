@@ -31,6 +31,7 @@ export default class Home extends Component{
                 isEditing: false,
                 editInput: '',
                 editItem: null,
+                isSpinning: false,
         }
     }
 
@@ -125,12 +126,19 @@ export default class Home extends Component{
             })
         }
     }
+
+    onSpinSwipe(isSpinning) {
+        this.setState({
+            isSpinning: isSpinning
+        })
+    }
   
     render() {
         return <View style={{flex: 1}}>
             <View style={{flex: 3, alignItems: 'center', justifyContent: 'center', marginTop: 50}}> 
                 <Wheel 
                     list={this.state.list}
+                    onSpinSwipe={(isSpinning) => this.onSpinSwipe(isSpinning)}
                 />
             </View>
             <ScrollView
@@ -151,7 +159,7 @@ export default class Home extends Component{
                         return <TouchableOpacity key={item.id}
                             style={styles.largeCircle}
                             onPress={() => this.setState({isEditing: true, editItem: item, editInput: item.value})}
-                            disabled={this.state.isAdding || this.state.isEditing}
+                            disabled={this.state.isAdding || this.state.isEditing || this.state.isSpinning}
                         >
                             <Text> {item.value} </Text>
                         </TouchableOpacity>
@@ -163,7 +171,7 @@ export default class Home extends Component{
                     <TouchableOpacity
                             style={[styles.smallCircle, {backgroundColor: 'white'}]}
                             onPress={() => this.setState({isAdding: true, addInput: ''})}
-                            disabled={this.state.isAdding || this.state.isEditing}
+                            disabled={this.state.isAdding || this.state.isEditing || this.state.isSpinning}
                     >
                         <Text> Add </Text>
                     </TouchableOpacity>
@@ -177,7 +185,7 @@ export default class Home extends Component{
                                         onAddToWheelPressed: item => this.onAddToWheelPressed(item),
                                     })
                             }}
-                            disabled={this.state.isAdding || this.state.isEditing}
+                            disabled={this.state.isAdding || this.state.isEditing || this.state.isSpinning}
                     >
                         <Text> Search </Text>
                     </TouchableOpacity>

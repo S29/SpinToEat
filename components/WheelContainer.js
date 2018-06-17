@@ -28,6 +28,9 @@ export default class Home extends Component{
                 list: [],
                 isAdding: false,
                 addInput: '',
+                isEditing: false,
+                editInput: '',
+                editItem: null,
         }
     }
 
@@ -39,6 +42,9 @@ export default class Home extends Component{
                 item.value = temp[0] + " " + temp[1]
             }
         }
+        item.color = this.getRandomColor()
+        item.type = 'searched'
+        item.id = item.id + Date.now()
         let list = this.state.list
         list.push(item)
         this.setState({
@@ -46,19 +52,48 @@ export default class Home extends Component{
         })
     }
 
-    onCheckPressed() {
+    getRandomColor() {
+		return 'rgb(' + 
+			Math.floor(Math.random()*256 ) + ','
+			+ Math.floor(Math.random()*256 ) + ','
+			+ Math.floor(Math.random()*256 ) +
+			')'
+	}
+
+    onAddCheckPressed() {
         let input = this.state.addInput.replace(/\s/g,'')
         if (input === '') {
             alert("Missing text")
         } else {
             let list = this.state.list
-            list.push({value: this.state.addInput, id: list.length + Date.now()})
+            list.push({
+                    value: this.state.addInput, 
+                    id: list.length + Date.now(),
+                    color: this.getRandomColor(),
+                    type: 'customized',
+                })
             this.setState({
                 isAdding: false,
                 list: list,
             })
-            console.warn(list)
         }
+    }
+
+    onEditCheckPressed() {
+        let item = this.state.editItem
+        item.value = this.state.editInput
+        let index = 0
+        for (i = 0; i < this.state.list.length; i++) {
+            if (item.id === this.state.list[i].id) {
+                index = i
+            }
+        }
+        let list = this.state.list
+        list[index] = item
+        this.setState({
+            list: list,
+            isEditing: false
+        })
     }
   
     render() {
@@ -85,7 +120,8 @@ export default class Home extends Component{
                     this.state.list.map((item) => {
                         return <TouchableOpacity key={item.id}
                             style={styles.largeCircle}
-                            onPress={() => alert("To edit or delete")}
+                            onPress={() => this.setState({isEditing: true, editItem: item, editInput: item.value})}
+                            disabled={this.state.isAdding}
                         >
                             <Text> {item.value} </Text>
                         </TouchableOpacity>
@@ -144,6 +180,7 @@ export default class Home extends Component{
                         }}
                         onChangeText={(text) => this.setState({addInput: text})}
                         value={this.state.addInput}
+                        maxLength={12}
                     />
 
                     <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
@@ -156,14 +193,58 @@ export default class Home extends Component{
 
                         <TouchableOpacity
                             style={styles.checkButton}
-                            onPress={() => this.onCheckPressed()}
+                            onPress={() => this.onAddCheckPressed()}
                         >
                             <Text style={{color: 'white'}}> ✓ </Text>
                         </TouchableOpacity>
-
                     </View>
                 </View>
             }
+
+            { 
+                this.state.isEditing &&
+                <View style={styles.addWindow}>
+                    <Text 
+                        style={{
+                            fontSize: 20, 
+                            fontWeight: 'bold',
+                            alignSelf: 'center',
+                            marginTop: 10,
+                            marginBottom: 10,
+                        }}> 
+                        Editing {this.state.editItem.value}
+                    </Text>
+                    <TextInput
+                        style={{
+                            height: 40, 
+                            borderColor: 'gray', 
+                            borderWidth: 1,
+                            marginLeft: 10,
+                            marginRight: 10,
+                            borderRadius: 3,
+                        }}
+                        onChangeText={(text) => this.setState({editInput: text})}
+                        value={this.state.editInput}
+                        maxLength={14}
+                    />
+                    <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                        <TouchableOpacity
+                            style={styles.cancelButton}
+                            onPress={() => this.setState({isEditing: false, editInput: ''})}
+                        >
+                            <Text style={{color: 'white'}}> ✗ </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.checkButton}
+                            onPress={() => this.onEditCheckPressed()}
+                        >
+                            <Text style={{color: 'white'}}> ✓ </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            }
+
         </View>
     }
 }

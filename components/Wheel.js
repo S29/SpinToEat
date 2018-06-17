@@ -37,21 +37,13 @@ export default class Wheel extends Component{
 			item = {
 				"number": 1,
 				"name": this.props.list[i].value,
-				"color": this.colorGenerator(),
+				"color": this.props.list[i].color,
 			}
 			data.push(item)
 		}
 		this.setState({
 			data: data
 		})
-	}
-
-	colorGenerator() {
-		return 'rgb(' + 
-			Math.floor(Math.random()*256 ) + ','
-			+ Math.floor(Math.random()*256 ) + ','
-			+ Math.floor(Math.random()*256 ) +
-			')'
 	}
 
 	handleViewRef = ref => this.view = ref;

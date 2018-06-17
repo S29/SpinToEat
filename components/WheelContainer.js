@@ -82,18 +82,48 @@ export default class Home extends Component{
     onEditCheckPressed() {
         let item = this.state.editItem
         item.value = this.state.editInput
-        let index = 0
+        let index = -1
         for (i = 0; i < this.state.list.length; i++) {
             if (item.id === this.state.list[i].id) {
                 index = i
+                break
             }
         }
-        let list = this.state.list
-        list[index] = item
-        this.setState({
-            list: list,
-            isEditing: false
-        })
+        if (index > -1) {
+            let list = this.state.list
+            list[index] = item
+            this.setState({
+                list: list,
+                isEditing: false
+            })
+        } else {
+            alert('failed')
+            this.setState({
+                isEditing: false
+            })
+        }
+    }
+
+    onDeletePressed() {
+        let index = -1
+        for (i = 0; i < this.state.list.length; i++) {
+            if (this.state.editItem.id === this.state.list[i].id) {
+                index = i
+            }
+        }
+        if (index > -1) {
+            let list = this.state.list
+            list.splice(index, 1);
+            this.setState({
+                isEditing: false,
+                list: list
+            })
+        } else {
+            alert('failed')
+            this.setState({
+                isEditing: false
+            })
+        }
     }
   
     render() {
@@ -121,7 +151,7 @@ export default class Home extends Component{
                         return <TouchableOpacity key={item.id}
                             style={styles.largeCircle}
                             onPress={() => this.setState({isEditing: true, editItem: item, editInput: item.value})}
-                            disabled={this.state.isAdding}
+                            disabled={this.state.isAdding || this.state.isEditing}
                         >
                             <Text> {item.value} </Text>
                         </TouchableOpacity>
@@ -133,7 +163,7 @@ export default class Home extends Component{
                     <TouchableOpacity
                             style={[styles.smallCircle, {backgroundColor: 'white'}]}
                             onPress={() => this.setState({isAdding: true, addInput: ''})}
-                            disabled={this.state.isAdding}
+                            disabled={this.state.isAdding || this.state.isEditing}
                     >
                         <Text> Add </Text>
                     </TouchableOpacity>
@@ -147,7 +177,7 @@ export default class Home extends Component{
                                         onAddToWheelPressed: item => this.onAddToWheelPressed(item),
                                     })
                             }}
-                            disabled={this.state.isAdding}
+                            disabled={this.state.isAdding || this.state.isEditing}
                     >
                         <Text> Search </Text>
                     </TouchableOpacity>
@@ -185,14 +215,14 @@ export default class Home extends Component{
 
                     <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
                         <TouchableOpacity
-                            style={styles.cancelButton}
+                            style={[styles.button, {backgroundColor: '#03A9F4'}]}
                             onPress={() => this.setState({isAdding: false, addInput: ''})}
                         >
                             <Text style={{color: 'white'}}> ✗ </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            style={styles.checkButton}
+                            style={[styles.button, {backgroundColor: '#8BC34A', marginRight: 15}]}
                             onPress={() => this.onAddCheckPressed()}
                         >
                             <Text style={{color: 'white'}}> ✓ </Text>
@@ -227,20 +257,29 @@ export default class Home extends Component{
                         value={this.state.editInput}
                         maxLength={14}
                     />
-                    <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                    <View style={{flexDirection: 'row'}}>
                         <TouchableOpacity
-                            style={styles.cancelButton}
-                            onPress={() => this.setState({isEditing: false, editInput: ''})}
+                            style={[styles.button, {backgroundColor: '#f44336', width: 60, marginLeft: 15}]}
+                            onPress={() => this.onDeletePressed()}
                         >
-                            <Text style={{color: 'white'}}> ✗ </Text>
+                            <Text style={{color: 'white'}}> delete </Text>
                         </TouchableOpacity>
+                        
+                        <View style={{flexDirection: 'row', position: 'absolute', right: 0}}>
+                            <TouchableOpacity
+                                style={[styles.button, {backgroundColor: '#03A9F4'}]}
+                                onPress={() => this.setState({isEditing: false, editInput: ''})}
+                            >
+                                <Text style={{color: 'white'}}> ✗ </Text>
+                            </TouchableOpacity>
 
-                        <TouchableOpacity
-                            style={styles.checkButton}
-                            onPress={() => this.onEditCheckPressed()}
-                        >
-                            <Text style={{color: 'white'}}> ✓ </Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.button, {backgroundColor: '#8BC34A', marginRight: 15}]}
+                                onPress={() => this.onEditCheckPressed()}
+                            >
+                                <Text style={{color: 'white'}}> ✓ </Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             }
@@ -279,7 +318,7 @@ const styles = StyleSheet.create({
         left: (window.width - window.width/1.5)/2,  // TODO: find another way to center the window
         top: window.height /3,   // above the add and search buttons
     },
-    cancelButton: {
+    button: {
         height: 40,
         width: 40,
         borderRadius: 20, 
@@ -292,17 +331,4 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         elevation: 3
     },
-    checkButton: {
-        height: 40,
-        width: 40,
-        borderRadius: 20, 
-        backgroundColor: '#8BC34A', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        marginTop: 10,
-        marginBottom: 10,
-        marginRight: 5,
-        marginLeft: 5,
-        elevation: 3
-    }
   });

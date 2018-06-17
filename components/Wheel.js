@@ -106,117 +106,133 @@ export default class Wheel extends Component{
 		let marginLeft = 20
 		let marginTop = 20
     	return <View>
-		{this.props.list.length >= 2 &&
-		<View style={{flex: 1}}>
-			<Animatable.View
-			ref={this.handleViewRef}
-			>
-
-				<Surface width={circleSize} height={circleSize}>
-					<Group x={ (circleSize/2 + 20) - marginLeft } y={ (circleSize/2 + 20) - marginTop }>
+			{this.props.list.length >= 2 &&
+				<View style={{flex: 1}}>
+					<Animatable.View
+					ref={this.handleViewRef}
+					>
+						<Surface width={circleSize} height={circleSize}>
+							<Group x={ (circleSize/2 + 20) - marginLeft } y={ (circleSize/2 + 20) - marginTop }>
+								{
+									arcs.map((arc) => {
+										return (
+											<Shape
+												key={arc.id}
+												d={arc.arcGenerator()}
+												strokeWidth={0}
+												fill={arc.fill}
+											/>
+										)
+									})
+								}
+							</Group>
+						</Surface>
 						{
 							arcs.map((arc) => {
-								return (
-									<Shape
-										key={arc.id}
-										d={arc.arcGenerator()}
-										strokeWidth={0}
-										fill={arc.fill}
-									/>
+								return(
+									<Text key={'label_' + arc.id}
+									style={{
+										textAlign: 'center',
+										position: 'absolute',
+										left: (circleSize/2 + 20 ) + arc.labelX - 20 - marginLeft - arc.label.length*5.5 + this.state.data.length*0.55,
+										top: (circleSize/2 + 20 ) + arc.labelY -20 - marginTop - arc.label.length + this.state.data.length*0.55,
+										backgroundColor: 'transparent',
+										fontSize: 30 - this.state.data.length*0.3,
+										color: 'black',
+										transform: [{ rotate: `${arc.labelAngle}rad` }]
+									}}>
+										{ arc.label }
+									</Text>
 								)
 							})
 						}
-					</Group>
-				</Surface>
-				{
-					arcs.map((arc) => {
-						return(
-							<Text key={'label_' + arc.id}
-							style={{
-								textAlign: 'center',
-								position: 'absolute',
-								left: (circleSize/2 + 20 ) + arc.labelX - 20 - marginLeft - arc.label.length*5.5 + this.state.data.length*0.55,
-								top: (circleSize/2 + 20 ) + arc.labelY -20 - marginTop - arc.label.length + this.state.data.length*0.55,
-								backgroundColor: 'transparent',
-								fontSize: 30 - this.state.data.length*0.3,
-								color: 'black',
-								transform: [{ rotate: `${arc.labelAngle}rad` }]
-							}}>
-								{ arc.label }
-							</Text>
-						)
-					})
-				}
-			</Animatable.View>
-			
-			<View style={[styles.orb, {left: circleSize/2 - 20}]}>
-			</View>
-			<View 
-				style={[styles.triangle, {left: circleSize/2 - 20}]}
-			>
-			</View>
+					</Animatable.View>
+					
+					<View style={[styles.orb, {left: circleSize/2 - 20}]}>
+					</View>
+					<View 
+						style={[styles.triangle, {left: circleSize/2 - 20}]}
+					>
+					</View>
 
-			{/* Top left */}
-			<GestureRecognizer
-				onSwipeRight={(state)=>this.onSpinSwipe(0)}
-				onSwipeDown={(state)=>this.onSpinSwipe(1)}
-				style={{
-					position: 'absolute',
-					left: 0,
-					top: 0,
-					width: circleSize/2,
-					height: circleSize/2,
-					backgroundColor: 'transparent'
-				}}
-			>
-			</GestureRecognizer>
+					{/* Top left */}
+					<GestureRecognizer
+						onSwipeRight={(state)=>this.onSpinSwipe(0)}
+						onSwipeDown={(state)=>this.onSpinSwipe(1)}
+						style={{
+							position: 'absolute',
+							left: 0,
+							top: 0,
+							width: circleSize/2,
+							height: circleSize/2,
+							backgroundColor: 'transparent'
+						}}
+					>
+					</GestureRecognizer>
 
-			{/* Top right */}
-			<GestureRecognizer
-				onSwipeDown={(state)=>this.onSpinSwipe(0)}
-				onSwipeLeft={(state)=>this.onSpinSwipe(1)}				
-				style={{
-					position: 'absolute',
-					left: circleSize/2,
-					top: 0,
-					width: circleSize/2,
-					height: circleSize/2,
-					backgroundColor: 'transparent'
-				}}
-			>
-			</GestureRecognizer>
+					{/* Top right */}
+					<GestureRecognizer
+						onSwipeDown={(state)=>this.onSpinSwipe(0)}
+						onSwipeLeft={(state)=>this.onSpinSwipe(1)}				
+						style={{
+							position: 'absolute',
+							left: circleSize/2,
+							top: 0,
+							width: circleSize/2,
+							height: circleSize/2,
+							backgroundColor: 'transparent'
+						}}
+					>
+					</GestureRecognizer>
 
-			{/* Bottom left */}
-			<GestureRecognizer
-				onSwipeUp={(state)=>this.onSpinSwipe(0)}
-				onSwipeRight={(state)=>this.onSpinSwipe(1)}				
-				style={{
-					position: 'absolute',
-					left: 0,
-					top: circleSize/2,
-					width: circleSize/2,
-					height: circleSize/2,
-					backgroundColor: 'transparent'
-				}}
-			>
-			</GestureRecognizer>
+					{/* Bottom left */}
+					<GestureRecognizer
+						onSwipeUp={(state)=>this.onSpinSwipe(0)}
+						onSwipeRight={(state)=>this.onSpinSwipe(1)}				
+						style={{
+							position: 'absolute',
+							left: 0,
+							top: circleSize/2,
+							width: circleSize/2,
+							height: circleSize/2,
+							backgroundColor: 'transparent'
+						}}
+					>
+					</GestureRecognizer>
 
-			{/* Bottom right */}
-			<GestureRecognizer
-				onSwipeLeft={(state)=>this.onSpinSwipe(0)}
-				onSwipeUp={(state)=>this.onSpinSwipe(1)}				
-				style={{
-					position: 'absolute',
-					left: circleSize/2,
-					top: circleSize/2,
-					width: circleSize/2,
-					height: circleSize/2,
-					backgroundColor: 'transparent'
-				}}
-			>
-			</GestureRecognizer>
-    	</View>
-		}
+					{/* Bottom right */}
+					<GestureRecognizer
+						onSwipeLeft={(state)=>this.onSpinSwipe(0)}
+						onSwipeUp={(state)=>this.onSpinSwipe(1)}				
+						style={{
+							position: 'absolute',
+							left: circleSize/2,
+							top: circleSize/2,
+							width: circleSize/2,
+							height: circleSize/2,
+							backgroundColor: 'transparent'
+						}}
+					>
+					</GestureRecognizer>
+				</View>
+			}
+			{
+				this.props.list.length < 2 &&
+				<View style={{flex: 1}}>
+					<View
+						style={{
+							backgroundColor: 'white',
+							height: circleSize, 
+							width: circleSize, 
+							borderRadius: circleSize/2,
+							elevation: 2,
+							position: 'absolute',
+							left: -circleSize/2
+						}}
+					>
+					</View>
+				</View>
+			}
 		</View>
   	}
 }

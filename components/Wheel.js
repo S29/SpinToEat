@@ -50,21 +50,17 @@ export default class Wheel extends Component{
 
 	onSpinSwipe(type) {
 		if(!this.state.isSpinning){
-			let realSpinBegin = 360 * 10 * 1
-			let endSpinDeg = Math.floor((Math.random() * 360 * 10 * 50)) + realSpinBegin
-
+			let lap = 360
+			let endSpinDeg = Math.floor((Math.random() * 360) + 1) + lap * 50
 			if (type === 1){	// counter clock wise
-				realSpinBegin = -360 * 10 * 1
-				endSpinDeg = -Math.floor((Math.random() * 360 * 10 * 50)) + realSpinBegin
+				realSpinBegin = -realSpinBegin
+				endSpinDeg = -endSpinDeg
 			}
 			// console.warn( (endSpinDeg - this.state.startAngle)/360 )
 			this.view.animate({
 				0: {
 					rotate: `${this.state.startAngle}deg`
 				},
-				// 0.2: { 
-				// 	rotate: `${realSpinBegin}deg` 
-				// },
 				1: {
 					rotate: `${endSpinDeg}deg`
 				}
